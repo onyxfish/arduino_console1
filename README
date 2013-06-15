@@ -1,0 +1,6 @@
+Arduino code and circuits to drive the primary (schematic) control console for Justin's movie.
+
+Random notes:
+
+* Pegboard has 3/16ths holes.
+* 5mm LED has ~6mm neck. Closest AWG is 13/64 (5.1594mm). 15/64 allows neck to fit snug
