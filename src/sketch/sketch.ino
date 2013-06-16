@@ -8,13 +8,29 @@ int switchPin = 2;
 
 bool is_lit = false;
 
+void updateLeds() {
+    digitalWrite(ledLatchPin, LOW);
+
+    SPI.transfer(is_lit);
+    SPI.transfer(!is_lit);
+    SPI.transfer(is_lit);
+    SPI.transfer(!is_lit);
+    SPI.transfer(is_lit);
+    SPI.transfer(!is_lit);
+
+    digitalWrite(ledLatchPin, HIGH);
+}
+
 void setup() { 
     pinMode(ledLatchPin, OUTPUT);
 
-    pinMode(switchPin, INPUT);
+    pinMode(switchPin, INPUT_PULLUP);
   
     SPI.begin();
     SPI.setBitOrder(LSBFIRST);
+
+    is_lit = (digitalRead(switchPin) == HIGH);
+    updateLeds();
 } 
 
 void loop() { 
@@ -24,16 +40,7 @@ void loop() {
     if (switchState != is_lit) {
         is_lit = switchState;
 
-        digitalWrite(ledLatchPin, LOW);
-
-        SPI.transfer(is_lit);
-        SPI.transfer(!is_lit);
-        SPI.transfer(is_lit);
-        SPI.transfer(!is_lit);
-        SPI.transfer(is_lit);
-        SPI.transfer(!is_lit);
-
-        digitalWrite(ledLatchPin, HIGH);
+        updateLeds();
     }
 
     delay(100);
