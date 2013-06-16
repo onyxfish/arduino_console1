@@ -1,3 +1,4 @@
+#include <avr/sleep.h>
 #include <SPI.h>
 
 //int ledClockPin = 13;
@@ -27,6 +28,12 @@ void setup() {
     PCICR = 0b00000100;     // PORTD, Pins PCINT16-23, digital pins 0-7
     PCMSK2 = 0b00000100;    // PCINT18, digital pin 2
     sei();
+
+    // Go to sleep
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    sleep_mode();
+    sleep_disable();
 } 
 
 /*
