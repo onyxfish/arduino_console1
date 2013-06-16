@@ -34,7 +34,7 @@ void setup() {
 } 
 
 void loop() { 
-    int switchState = (digitalRead(switchPin) == HIGH);
+    bool switchState = (digitalRead(switchPin) == HIGH);
 
     // Check if state changed
     if (switchState != is_lit) {
