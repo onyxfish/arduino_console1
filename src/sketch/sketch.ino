@@ -8,6 +8,44 @@ int switchPin = 2;
 
 bool is_lit = false;
 
+/* 
+ * Initialize the app.
+ */
+void setup() { 
+    pinMode(ledLatchPin, OUTPUT);
+    pinMode(switchPin, INPUT_PULLUP);
+  
+    SPI.begin();
+    SPI.setBitOrder(LSBFIRST);
+
+    // Setup initial state
+    is_lit = (digitalRead(switchPin) == HIGH);
+    updateLeds();
+
+    // Enable interrupts
+    cli();
+    PCICR = 0b00000100;     // PORTD, Pins PCINT16-23, digital pins 0-7
+    PCMSK2 = 0b00000100;    // PCINT18, digital pin 2
+    sei();
+} 
+
+/*
+ * Main loop. Do nothing since interrupts are running.
+ */
+void loop() { 
+}   
+
+/*
+ * Switch pin change interrupt.
+ */
+ISR(PCINT2_vect) {
+    is_lit = (digitalRead(switchPin) == HIGH);
+    updateLeds();
+}
+
+/*
+ * Utility function to set the state of all LEDs.
+ */
 void updateLeds() {
     digitalWrite(ledLatchPin, LOW);
 
@@ -21,27 +59,3 @@ void updateLeds() {
     digitalWrite(ledLatchPin, HIGH);
 }
 
-void setup() { 
-    pinMode(ledLatchPin, OUTPUT);
-
-    pinMode(switchPin, INPUT_PULLUP);
-  
-    SPI.begin();
-    SPI.setBitOrder(LSBFIRST);
-
-    is_lit = (digitalRead(switchPin) == HIGH);
-    updateLeds();
-} 
-
-void loop() { 
-    bool switchState = (digitalRead(switchPin) == HIGH);
-
-    // Check if state changed
-    if (switchState != is_lit) {
-        is_lit = switchState;
-
-        updateLeds();
-    }
-
-    delay(100);
-}   
