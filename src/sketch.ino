@@ -18,6 +18,7 @@ void setup() {
   
     SPI.begin();
     SPI.setBitOrder(LSBFIRST);
+    SPI.setClockDivider(SPI_CLOCK_DIV2);
 
     // Setup initial state
     is_lit = (digitalRead(switchPin) == HIGH);
