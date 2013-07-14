@@ -180,9 +180,12 @@ void loop() {
     byte newLeftNumLit = (float(analogRead(leftPotPin)) / 1000) * 16;
     byte newRightNumLit = (float(analogRead(rightPotPin)) / 1000) * 16;
 
-    //Serial.println(newLeftLit);
-
     if (newRightOn != rightOn || newRightNumLit  != rightNumLit || newLeftOn != leftOn|| newLeftNumLit != leftNumLit) {
+        /*Serial.println(newLeftOn);
+        Serial.println(newRightOn);
+        Serial.println(newLeftNumLit);
+        Serial.println(newRightNumLit);*/
+        
         leftOn = newLeftOn;
         rightOn = newRightOn;
         leftNumLit = newLeftNumLit;
@@ -200,8 +203,8 @@ void loop() {
 void updateLeds() {
     digitalWrite(ledLatchPin, LOW);
 
-    SPI.transfer(rightState[0]);
     SPI.transfer(rightState[1]);
+    SPI.transfer(rightState[0]);
     SPI.transfer(leftState[0]);
     SPI.transfer(leftState[1]);
     SPI.transfer(leftState[2]);
