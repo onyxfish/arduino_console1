@@ -47,14 +47,24 @@ void setup() {
 
     leftOn = (digitalRead(leftSwitchPin) == LOW);
     rightOn = (digitalRead(rightSwitchPin) == LOW);
-    leftNumLit = (float(analogRead(leftPotPin)) / 1000) * 16;
-    rightNumLit = (float(analogRead(rightPotPin)) / 1000) * 16;
+    leftNumLit = readNumLit(leftPotPin);
+    rightNumLit = readNumLit(rightPotPin);
 
     // Setup initial state
     updateLeftState();
     updateRightState();
     updateLeds();
 } 
+
+byte readNumLit(byte pin) {
+    byte num = (float(analogRead(pin)) / 800) * 16;
+
+    if (num > 16) {
+        num = 16;
+    }
+
+    return num;
+}
 
 void updateLeftState() {
     if (!leftOn) {
@@ -177,8 +187,8 @@ void updateRightState() {
 void loop() { 
     bool newLeftOn = (digitalRead(leftSwitchPin) == LOW);
     bool newRightOn = (digitalRead(rightSwitchPin) == LOW);
-    byte newLeftNumLit = (float(analogRead(leftPotPin)) / 1000) * 16;
-    byte newRightNumLit = (float(analogRead(rightPotPin)) / 1000) * 16;
+    byte newLeftNumLit = readNumLit(leftPotPin);
+    byte newRightNumLit = readNumLit(rightPotPin);
 
     if (newRightOn != rightOn || newRightNumLit  != rightNumLit || newLeftOn != leftOn|| newLeftNumLit != leftNumLit) {
         /*Serial.println(newLeftOn);
@@ -205,10 +215,10 @@ void updateLeds() {
 
     SPI.transfer(rightState[1]);
     SPI.transfer(rightState[0]);
-    SPI.transfer(leftState[0]);
-    SPI.transfer(leftState[1]);
-    SPI.transfer(leftState[2]);
     SPI.transfer(leftState[3]);
+    SPI.transfer(leftState[2]);
+    SPI.transfer(leftState[1]);
+    SPI.transfer(leftState[0]);
 
     digitalWrite(ledLatchPin, HIGH);
 }
