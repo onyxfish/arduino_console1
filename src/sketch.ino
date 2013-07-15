@@ -47,8 +47,8 @@ void setup() {
 
     leftOn = (digitalRead(leftSwitchPin) == LOW);
     rightOn = (digitalRead(rightSwitchPin) == LOW);
-    leftNumLit = readNumLit(leftPotPin);
-    rightNumLit = readNumLit(rightPotPin);
+    leftNumLit = readNumLit(leftPotPin, 16);
+    rightNumLit = readNumLit(rightPotPin, 8);
 
     // Setup initial state
     updateLeftState();
@@ -56,14 +56,14 @@ void setup() {
     updateLeds();
 } 
 
-byte readNumLit(byte pin) {
+byte readNumLit(byte pin, byte maxVal) {
     byte num = (float(analogRead(pin)) / 800) * 16;
 
-    if (num > 16) {
-        num = 16;
+    if (num > maxVal) {
+        num = maxVal;
     }
 
-    return num;
+    return maxVal - num;
 }
 
 void updateLeftState() {
@@ -187,8 +187,8 @@ void updateRightState() {
 void loop() { 
     bool newLeftOn = (digitalRead(leftSwitchPin) == LOW);
     bool newRightOn = (digitalRead(rightSwitchPin) == LOW);
-    byte newLeftNumLit = readNumLit(leftPotPin);
-    byte newRightNumLit = readNumLit(rightPotPin);
+    byte newLeftNumLit = readNumLit(leftPotPin, 16);
+    byte newRightNumLit = readNumLit(rightPotPin, 8);
 
     if (newRightOn != rightOn || newRightNumLit  != rightNumLit || newLeftOn != leftOn|| newLeftNumLit != leftNumLit) {
         /*Serial.println(newLeftOn);
